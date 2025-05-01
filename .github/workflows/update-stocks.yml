@@ -1,41 +1,43 @@
 name: Update JPX Stocks List
 
 on:
-  schedule:
-    - cron: "0 3 * * *"  # 毎日12:00 JST に実行
   workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"  # JST 12:00
 
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install dependencies
-        run: |
-          pip install pandas requests
+        run: pip install pandas requests
 
-      - name: Download JPX CSV and convert to JSON
+      - name: Download JPX CSV
         run: |
           mkdir -p data
-          curl -o jpx.csv "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq00000030vg-att/data_j.csv"
-          python3 -c "
-import pandas as pd
-df = pd.read_csv('jpx.csv', encoding='shift_jis')
+          curl -o data/jpx.csv "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq00000030vg-att/data_j.csv"
+
+      - name: Convert CSV to JSON
+        run: |
+          echo "import pandas as pd
+df = pd.read_csv('data/jpx.csv', encoding='shift_jis')
 df = df[['コード', '銘柄名']].dropna()
 df.columns = ['code', 'name']
 df['code'] = df['code'].astype(str).str.zfill(4)
 df.to_json('data/stocks.json', orient='records', force_ascii=False, indent=2)
-"
+" > convert.py
+          python3 convert.py
 
-      - name: Commit and push
+      - name: Commit and push changes
         run: |
           git config user.name 'github-actions'
           git config user.email 'github-actions@github.com'
