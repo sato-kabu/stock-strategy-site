@@ -32,7 +32,7 @@ jobs:
         run: |
           cat << 'EOF' > convert.py
           import pandas as pd
-          df = pd.read_csv("data/jpx.csv", encoding="shift_jis")
+          df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig")
           df = df[["コード", "銘柄名"]].dropna()
           df.columns = ["code", "name"]
           df["code"] = df["code"].astype(str).str.zfill(4)
