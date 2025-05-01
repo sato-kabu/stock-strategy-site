@@ -3,7 +3,7 @@ name: Update JPX Stock List
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 3 * * *'  # 日本時間12:00に毎日実行
+    - cron: '0 3 * * *'  # 日本時間12:00に毎日実行
 
 jobs:
   update:
@@ -32,7 +32,7 @@ jobs:
         run: |
           cat << 'EOF' > convert.py
           import pandas as pd
-          df = pd.read_csv("data/jpx.csv", encoding="cp932")
+          df = pd.read_csv("data/jpx.csv", encoding="shift_jis")
           df = df[["コード", "銘柄名"]].dropna()
           df.columns = ["code", "name"]
           df["code"] = df["code"].astype(str).str.zfill(4)
