@@ -7,16 +7,22 @@ def scrape_irbank_stock_list():
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
 
+    print("✅ レスポンス取得成功")
+
+    links = soup.select("a[href^='/']")
+    print(f"🔍 該当リンク数: {len(links)}")
+
     stocks = []
-    for a in soup.select("a[href^='/']"):
+    for a in links:
         text = a.text.strip()
         href = a["href"]
-        # 4桁以上の数字だけ抽出（証券コード形式）
         if href.count("/") == 1 and href[1:].isdigit() and len(href[1:]) >= 4:
             stocks.append({
                 "code": href[1:],
                 "name": text
             })
+
+    print(f"✅ 銘柄数抽出: {len(stocks)}")
 
     with open("data/stocks.json", "w", encoding="utf-8") as f:
         json.dump(stocks, f, ensure_ascii=False, indent=2)
