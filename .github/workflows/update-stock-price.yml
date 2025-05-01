@@ -20,12 +20,12 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Run stock price scraper
-        run: python data/scripts/scrape_irbank.py
+        run: python3 data/scripts/scrape_stock_price.py
 
-- name: Commit and push stock data
-  run: |
-    git config user.name 'github-actions'
-    git config user.email 'github-actions@github.com'
-    git add data/stock_*.json
-    git commit -m 'Update stock price data' || true
-    git push || true
+      - name: Commit and push stock data
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add data/stock_*.json
+          git commit -m 'Update stock price data' || true
+          git push || true
