@@ -5,22 +5,38 @@
   <title>保有株・資金の入力</title>
 </head>
 <body>
-  <h1>保有株と余力資金の登録</h1>
+  <h1>保有株と余力資金の入力</h1>
 
-  <form>
-    <label>銘柄コード：<input type="text" name="code"></label><br><br>
-    <label>銘柄名：<input type="text" name="name"></label><br><br>
-    <label>取得単価（円）：<input type="number" name="price"></label><br><br>
-    <label>株数：<input type="number" name="amount"></label><br><br>
-    <label>余力資金（円）：<input type="number" name="cash"></label><br><br>
+  <form id="stockForm">
+    <label>銘柄コード：<input type="text" name="code" required></label><br><br>
+    <label>銘柄名：<input type="text" name="name" required></label><br><br>
+    <label>取得単価（円）：<input type="number" name="price" required></label><br><br>
+    <label>株数：<input type="number" name="amount" required></label><br><br>
+    <label>余力資金（円）：<input type="number" name="cash" required></label><br><br>
 
-    <p>※現在は送信できません（仮フォームです）</p>
-    <button disabled>送信</button>
+    <button type="submit">送信</button>
   </form>
 
-  <p><a href="index.html">← トップに戻る</a></p>
+  <p id="status"></p>
+
+  <p><a href="index.html">← トップページに戻る</a></p>
+
+  <script>
+    document.getElementById("stockForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const params = new URLSearchParams(data);
+
+      fetch("https://script.google.com/macros/s/AKfycbz4mlzyK9Uro-bpCEJNy-jz8Dv07CvarQibTNkS3WkWcQmuiUv6qf7c2DVE40eW1OqH6A/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: params
+      });
+
+      document.getElementById("status").textContent = "送信されました！（反映まで少し時間がかかることがあります）";
+      form.reset();
+    });
+  </script>
 </body>
 </html>
-<p><a href="https://forms.gle/VGah8nJfFkUE7kwi9" target="_blank">
-▶ Googleフォームで保有株を入力する
-</a></p>
