@@ -3,7 +3,7 @@ name: Update JPX Stocks List
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 3 * * *"  # 日本時間12:00に毎日実行
 
 jobs:
   update:
@@ -29,13 +29,13 @@ jobs:
       - name: Create convert.py script
         run: |
           cat << 'EOF' > convert.py
-          import pandas as pd
-          df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig")
-          df = df[["コード", "銘柄名"]].dropna()
-          df.columns = ["code", "name"]
-          df["code"] = df["code"].astype(str).str.zfill(4)
-          df.to_json("data/stocks.json", orient="records", force_ascii=False, indent=2)
-          EOF
+import pandas as pd
+df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig", sep='\t')
+df = df[["コード", "銘柄名"]].dropna()
+df.columns = ["code", "name"]
+df["code"] = df["code"].astype(str).str.zfill(4)
+df.to_json("data/stocks.json", orient="records", force_ascii=False, indent=2)
+EOF
 
       - name: Run conversion script
         run: python3 convert.py
