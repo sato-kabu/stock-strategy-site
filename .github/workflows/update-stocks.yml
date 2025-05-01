@@ -1,13 +1,15 @@
-name: Update JPX Stocks List
+name: Update JPX Stocks from XLS
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 3 * * *"  # 日本時間12:00に毎日実行
+    - cron: '0 3 * * *'  # 毎日日本時間12:00に自動実行
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -16,34 +18,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install pandas requests
+      - name: Install Python dependencies
+        run: pip install pandas xlrd
 
-      - name: Download JPX CSV
+      - name: Download JPX XLS file
         run: |
           mkdir -p data
-          curl -o data/jpx.csv "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq00000030vg-att/data_j.csv"
+          curl -o data/data_j.xls "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq00000030vg-att/data_j.xls"
 
-      - name: Create convert.py script
-        run: |
-          cat << 'EOF' > convert.py
-          import pandas as pd
-          df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig", sep="\t", header=1)
-          df = df[["コード", "銘柄名"]].dropna()
-          df.columns = ["code", "name"]
-          df["code"] = df["code"].astype(str).str.zfill(4)
-          df.to_json("data/stocks.json", orient="records", force_ascii=False, indent=2)
-          EOF
+      - name: Run convert.py to generate stocks.json
+        run: python convert.py
 
-      - name: Run conversion script
-        run: python3 convert.py
-
-      - name: Commit and push changes
+      - name: Commit and push updated stocks.json
         run: |
           git config user.name 'github-actions'
           git config user.email 'github-actions@github.com'
           git add data/stocks.json
-          git commit -m 'Update stocks.json' || echo "No changes to commit"
+          git commit -m 'Update stocks.json from JPX xls' || echo "No changes to commit"
           git push
