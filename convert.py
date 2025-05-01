@@ -1,7 +1,7 @@
 import pandas as pd
 
-# JPXの.xlsファイルを読み込み
-df = pd.read_excel("data/data_j.xls", dtype=str)
+# JPXの.xlsファイルを明示的にxlrdで読み込む
+df = pd.read_excel("data/data_j.xls", dtype=str, engine="xlrd")
 
 # 必要な列だけを抽出して整形
 df = df[["コード", "銘柄名"]].dropna()
