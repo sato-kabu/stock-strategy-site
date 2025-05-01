@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>保有株・資金の入力</title>
+  <style>
+    datalist option {
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <h1>保有株と余力資金の入力</h1>
 
   <form id="stockForm">
     <label>銘柄コード：
-      <input type="text" name="code" id="stock-code" list="stock-suggestions" required>
+      <input type="text" name="code" id="code" list="codeList" required>
     </label><br><br>
 
-    <label>銘柄名：
-      <input type="text" name="name" id="stock-name" required>
-    </label><br><br>
-
+    <label>銘柄名：<input type="text" name="name" id="name" required></label><br><br>
     <label>取得単価（円）：<input type="number" name="price" required></label><br><br>
     <label>株数：<input type="number" name="amount" required></label><br><br>
     <label>余力資金（円）：<input type="number" name="cash" required></label><br><br>
@@ -23,54 +25,35 @@
     <button type="submit">送信</button>
   </form>
 
-  <datalist id="stock-suggestions"></datalist>
+  <datalist id="codeList"></datalist>
 
   <p id="status"></p>
 
   <p><a href="index.html">← トップページに戻る</a></p>
 
   <script>
-    // 候補リストを取得
-    let stockList = [];
-
-    fetch('https://sato-kabu.github.io/stock-strategy-site/data/stocks.json')
-      .then(res => res.json())
+    // 🔹 stocks.json を読み込んで datalist を構築
+    fetch("data/stocks.json")
+      .then(response => response.json())
       .then(data => {
-        stockList = data;
-      });
-
-    const inputCode = document.getElementById('stock-code');
-    const inputName = document.getElementById('stock-name');
-    const datalist = document.getElementById('stock-suggestions');
-
-    inputCode.addEventListener('input', () => {
-      const value = inputCode.value.trim();
-      datalist.innerHTML = '';
-
-      if (value.length > 0) {
-        const filtered = stockList.filter(stock =>
-          stock.code.startsWith(value) || stock.name.includes(value)
-        );
-
-        filtered.forEach(stock => {
-          const option = document.createElement('option');
-          option.value = `${stock.code} ${stock.name}`;
+        const datalist = document.getElementById("codeList");
+        data.forEach(stock => {
+          const option = document.createElement("option");
+          option.value = stock.code;
+          option.text = `${stock.code} - ${stock.name}`;
           datalist.appendChild(option);
         });
-      }
-    });
 
-    inputCode.addEventListener('change', () => {
-      const selected = inputCode.value.trim();
-      const code = selected.split(' ')[0];
-      const found = stockList.find(s => s.code === code);
-      if (found) {
-        inputCode.value = found.code;
-        inputName.value = found.name;
-      }
-    });
+        // 🔹 銘柄名の自動入力
+        const codeInput = document.getElementById("code");
+        const nameInput = document.getElementById("name");
+        codeInput.addEventListener("input", () => {
+          const selected = data.find(s => s.code === codeInput.value);
+          nameInput.value = selected ? selected.name : "";
+        });
+      });
 
-    // Google Apps Script 送信
+    // 🔹 フォーム送信
     document.getElementById("stockForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const form = e.target;
