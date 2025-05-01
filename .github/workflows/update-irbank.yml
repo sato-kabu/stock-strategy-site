@@ -24,7 +24,7 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Run scrape_irbank.py
-        run: python scripts/scrape_irbank.py
+        run: python data/scripts/scrape_irbank.py
 
       - name: Commit and push updated stocks.json
         run: |
