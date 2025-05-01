@@ -1,15 +1,13 @@
-name: Update JPX Stock List
+name: Update JPX Stocks List
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  # 日本時間12:00に毎日実行
+    - cron: "0 3 * * *"  # 日本時間12:00に毎日実行
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -18,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.x"
 
       - name: Install dependencies
         run: pip install pandas requests
@@ -32,7 +30,7 @@ jobs:
         run: |
           cat << 'EOF' > convert.py
           import pandas as pd
-          df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig", sep="\t", skiprows=1)
+          df = pd.read_csv("data/jpx.csv", encoding="utf-8-sig", sep="\t", header=1)
           df = df[["コード", "銘柄名"]].dropna()
           df.columns = ["code", "name"]
           df["code"] = df["code"].astype(str).str.zfill(4)
@@ -47,5 +45,5 @@ jobs:
           git config user.name 'github-actions'
           git config user.email 'github-actions@github.com'
           git add data/stocks.json
-          git commit -m 'Update stocks.json'
+          git commit -m 'Update stocks.json' || echo "No changes to commit"
           git push
