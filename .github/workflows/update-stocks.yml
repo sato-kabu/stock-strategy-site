@@ -2,7 +2,7 @@ name: Update JPX Stocks List
 
 on:
   schedule:
-    - cron: "0 3 * * *"  # 毎日12:00（日本時間）に実行
+    - cron: "0 3 * * *"  # 毎日12:00 JST に実行
   workflow_dispatch:
 
 jobs:
@@ -19,7 +19,8 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: pip install pandas requests
+        run: |
+          pip install pandas requests
 
       - name: Download JPX CSV and convert to JSON
         run: |
@@ -33,6 +34,7 @@ df.columns = ['code', 'name']
 df['code'] = df['code'].astype(str).str.zfill(4)
 df.to_json('data/stocks.json', orient='records', force_ascii=False, indent=2)
 "
+
       - name: Commit and push
         run: |
           git config user.name 'github-actions'
