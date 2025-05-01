@@ -33,7 +33,7 @@
     // 候補リストを取得
     let stockList = [];
 
-    fetch('data/stocks.json')
+    fetch('https://sato-kabu.github.io/stock-strategy-site/data/stocks.json')
       .then(res => res.json())
       .then(data => {
         stockList = data;
