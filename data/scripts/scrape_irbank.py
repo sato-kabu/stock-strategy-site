@@ -8,13 +8,12 @@ def fetch_company_name(code):
     headers = {"User-Agent": "Mozilla/5.0"}
     try:
         res = requests.get(url, headers=headers, timeout=10)
-        if res.status_code != 200:
-            return None
+        res.raise_for_status()
         soup = BeautifulSoup(res.content, "html.parser")
         h1 = soup.find("h1")
         return h1.text.strip() if h1 else None
     except Exception as e:
-        print(f"Error fetching {code}: {e}")
+        print(f"[ERROR] {code} の取得に失敗: {e}")
         return None
 
 def main():
@@ -25,13 +24,14 @@ def main():
         name = fetch_company_name(code)
         if name:
             results.append({"code": code, "name": name})
-            print(f"取得成功: {code} → {name}")
+            print(f"[OK] {code}: {name}")
         else:
-            print(f"取得失敗: {code}")
+            print(f"[NG] {code}: 企業名取得失敗")
         time.sleep(1)
 
     with open("data/stocks.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
+        print("[DONE] JSONファイルを保存しました: data/stocks.json")
 
 if __name__ == "__main__":
     main()
