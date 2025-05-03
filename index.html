@@ -1,1 +1,87 @@
-<html><body><h1>株価予測サイト（準備中）</h1><p>データ取得は成功しています</p></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>銘柄検索（予測入力）</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 30px;
+      background: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+    }
+    #search {
+      width: 300px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    #suggestions {
+      width: 300px;
+      border: 1px solid #ccc;
+      background: #fff;
+      max-height: 200px;
+      overflow-y: auto;
+      position: absolute;
+      z-index: 10;
+    }
+    #suggestions div {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>銘柄コード・名称から検索</h2>
+  <input type="text" id="search" placeholder="例: 7203 や トヨタ" autocomplete="off">
+  <div id="suggestions"></div>
+
+  <script>
+    let codes = [];
+
+    // 🔽 1. JSON 読み込み（GitHub Pages 上では相対パスで OK）
+    fetch("data/codes.json")
+      .then(response => response.json())
+      .then(data => {
+        codes = data;
+      })
+      .catch(err => {
+        console.error("codes.json の読み込みに失敗しました:", err);
+      });
+
+    // 🔽 2. 入力イベントで候補表示
+    const input = document.getElementById("search");
+    const suggestions = document.getElementById("suggestions");
+
+    input.addEventListener("input", () => {
+      const keyword = input.value.trim();
+      suggestions.innerHTML = "";
+      if (!keyword) return;
+
+      const matched = codes.filter(code => code.includes(keyword)).slice(0, 30);
+      matched.forEach(code => {
+        const div = document.createElement("div");
+        div.textContent = code;
+        div.onclick = () => {
+          input.value = code;
+          suggestions.innerHTML = "";
+        };
+        suggestions.appendChild(div);
+      });
+    });
+
+    // 🔽 3. フォーカス外で候補を消す
+    document.addEventListener("click", (e) => {
+      if (e.target !== input) {
+        suggestions.innerHTML = "";
+      }
+    });
+  </script>
+
+</body>
+</html>
