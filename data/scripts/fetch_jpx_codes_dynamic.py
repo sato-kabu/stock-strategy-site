@@ -1,57 +1,63 @@
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
+from bs4 import BeautifulSoup
 import os
+import datetime
 
-JPX_URL = "https://www.jpx.co.jp/markets/statistics-equities/misc/01.html"
-BASE_URL = "https://www.jpx.co.jp"
+JPX_URL = "https://www.jpx.co.jp/markets/statistics-equities/misc/index.html"
 SAVE_EXCEL_PATH = "data/jpx_codes.xlsx"
-SAVE_JSON_PATH = "data/codes.json"
+OUTPUT_JSON_PATH = "data/jpx_codes.json"
 
-def fetch_excel_url():
+def find_excel_link():
     print("[INFO] JPXページからExcelリンクを検索中...")
     res = requests.get(JPX_URL)
     soup = BeautifulSoup(res.content, "html.parser")
-    link_tag = soup.select_one('a[href$=".xls"]')
-    if link_tag:
-        href = link_tag.get("href")
-        full_url = BASE_URL + href
-        print(f"[SUCCESS] Excelリンク発見: {full_url}")
-        return full_url
-    else:
-        raise RuntimeError("Excelリンクが見つかりませんでした")
+    link_tag = soup.find("a", href=True, string=lambda x: x and "xls" in x)
+    if not link_tag:
+        raise Exception("Excelリンクが見つかりませんでした")
+    href = link_tag["href"]
+    if not href.startswith("http"):
+        href = "https://www.jpx.co.jp" + href
+    print(f"[SUCCESS] Excelリンク発見: {href}")
+    return href
 
 def download_excel(url):
     print("[INFO] Excelファイルをダウンロード中...")
     res = requests.get(url)
-    if res.status_code != 200:
-        raise RuntimeError("Excelファイルのダウンロードに失敗しました")
-    os.makedirs(os.path.dirname(SAVE_EXCEL_PATH), exist_ok=True)
     with open(SAVE_EXCEL_PATH, "wb") as f:
         f.write(res.content)
     print(f"[SUCCESS] Excelを保存: {SAVE_EXCEL_PATH}")
 
 def extract_codes():
     print("[INFO] Excelから銘柄コードを抽出中...")
-    df = pd.read_excel(SAVE_EXCEL_PATH, skiprows=1)
+    df = pd.read_excel(SAVE_EXCEL_PATH, header=1)  # 2行目からヘッダー
+    if "コード" not in df.columns or "銘柄名" not in df.columns:
+        raise Exception("列 'コード' または '銘柄名' が見つかりません")
+    df = df[["コード", "銘柄名"]].dropna()
+    df["コード"] = df["コード"].astype(str).str.zfill(4)
+    return df.to_dict(orient="records")
 
-    # 'コード'列から空でない値を取り出し、文字列化（例：130Aなど対応）
-    codes = df["コード"].dropna().astype(str).str.strip().tolist()
-
-    print(f"[INFO] {len(codes)} 件のコードを取得しました")
-    return codes
-
-def save_codes_as_json(codes):
-    import json
-    with open(SAVE_JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(codes, f, ensure_ascii=False, indent=2)
-    print(f"[INFO] コード一覧を保存: {SAVE_JSON_PATH}")
+def should_run_today():
+    # 第3営業日か判定（日本時間基準、UTC+9）
+    JST = datetime.timezone(datetime.timedelta(hours=9))
+    today = datetime.datetime.now(JST).date()
+    month_dates = pd.date_range(start=today.replace(day=1), end=today + pd.Timedelta(days=31), freq="B")
+    third_business_day = month_dates[2].date()
+    return today == third_business_day
 
 def main():
-    excel_url = fetch_excel_url()
+    if not should_run_today():
+        print("[SKIP] 本日は第3営業日ではありません。スキップします。")
+        return
+
+    excel_url = find_excel_link()
     download_excel(excel_url)
     codes = extract_codes()
-    save_codes_as_json(codes)
+
+    with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as f:
+        import json
+        json.dump(codes, f, ensure_ascii=False, indent=2)
+    print(f"[SUCCESS] {len(codes)} 件の銘柄を {OUTPUT_JSON_PATH} に保存しました。")
 
 if __name__ == "__main__":
     main()
