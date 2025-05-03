@@ -1,33 +1,33 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI株価分析</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <header class="bg-gray-800 p-6 shadow-lg">
-    <h1 class="text-3xl font-bold text-center text-blue-400">📈 AI株価分析</h1>
-    <p class="text-center text-sm text-gray-400 mt-1">革新的なAIによる株価戦略提案サイト</p>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-blue-900 text-white p-4 text-center">
+    <h1 class="text-3xl font-bold">AI株価分析</h1>
+    <p class="text-sm mt-1">株の未来を読む、新時代のトレード支援ツール</p>
   </header>
 
-  <main class="p-8 space-y-6">
-    <section class="text-center">
-      <h2 class="text-2xl font-bold mb-4">🔥 今のおすすめ機能</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- カード1 -->
-        <a href="/recommend" class="bg-blue-800 p-6 rounded-lg hover:bg-blue-700 transition">
-          <h3 class="text-xl font-semibold">📊 現在のおすすめ銘柄</h3>
-          <p class="text-sm text-gray-300 mt-2">AIが短期的に上昇を狙える銘柄を予測</p>
-        </a>
-        <!-- カード2 -->
-        <a href="/search" class="bg-green-800 p-6 rounded-lg hover:bg-green-700 transition">
-          <h3 class="text-xl font-semibold">🔍 銘柄検索（AI分析付き）</h3>
-          <p class="text-sm text-gray-300 mt-2">銘柄コードや社名を入力するだけでAIが分析・アドバイス</p>
-        </a>
-      </div>
-    </section>
+  <main class="max-w-5xl mx-auto py-12 px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a href="/recommend" class="bg-white shadow-md p-6 rounded-lg hover:bg-blue-50">
+        <h2 class="text-xl font-bold mb-2">📈 おすすめ銘柄</h2>
+        <p class="text-sm text-gray-600">AIが厳選した今注目の銘柄を確認できます。</p>
+      </a>
+      <a href="/portfolio" class="bg-white shadow-md p-6 rounded-lg hover:bg-blue-50">
+        <h2 class="text-xl font-bold mb-2">🧮 保有株・資金入力</h2>
+        <p class="text-sm text-gray-600">あなたの保有株と余力資金を元に戦略をAIが分析します。</p>
+      </a>
+      <a href="/analyze" class="bg-white shadow-md p-6 rounded-lg hover:bg-blue-50">
+        <h2 class="text-xl font-bold mb-2">🔍 銘柄検索（AI分析）</h2>
+        <p class="text-sm text-gray-600">銘柄を検索すると、その銘柄のAI評価が確認できます。</p>
+      </a>
+    </div>
   </main>
 </body>
 </html>
