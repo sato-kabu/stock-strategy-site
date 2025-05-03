@@ -13,7 +13,8 @@ def find_excel_link():
     print("[INFO] JPXページからExcelリンクを検索中...")
     res = requests.get(JPX_URL)
     soup = BeautifulSoup(res.content, "html.parser")
-    link_tag = soup.find("a", href=True, string=lambda x: x and "xls" in x)
+    # 文字列ではなくhref属性にxlsを含むものを検索
+    link_tag = soup.find("a", href=lambda href: href and "xls" in href)
     if not link_tag:
         raise Exception("Excelリンクが見つかりませんでした")
     href = link_tag["href"]
