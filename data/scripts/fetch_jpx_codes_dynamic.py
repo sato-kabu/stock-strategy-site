@@ -13,10 +13,12 @@ def find_excel_link():
     print("[INFO] JPXページからExcelリンクを検索中...")
     res = requests.get(JPX_URL)
     soup = BeautifulSoup(res.content, "html.parser")
-    # 文字列ではなくhref属性にxlsを含むものを検索
-    link_tag = soup.find("a", href=lambda href: href and "xls" in href)
+    
+    # 正しい「上場銘柄一覧」Excelリンクのみを対象にする
+    link_tag = soup.find("a", href=lambda href: href and "data_j.xls" in href)
     if not link_tag:
-        raise Exception("Excelリンクが見つかりませんでした")
+        raise Exception("正しいExcelリンクが見つかりませんでした")
+    
     href = link_tag["href"]
     if not href.startswith("http"):
         href = "https://www.jpx.co.jp" + href
@@ -32,9 +34,12 @@ def download_excel(url):
 
 def extract_codes():
     print("[INFO] Excelから銘柄コードを抽出中...")
-    df = pd.read_excel(SAVE_EXCEL_PATH, header=1)  # 2行目がヘッダー
+    df = pd.read_excel(SAVE_EXCEL_PATH, header=1)
+    
     if "コード" not in df.columns or "銘柄名" not in df.columns:
+        print("[DEBUG] カラム一覧:", list(df.columns))  # カラム一覧を表示
         raise Exception("列 'コード' または '銘柄名' が見つかりません")
+    
     df = df[["コード", "銘柄名"]].dropna()
     df["コード"] = df["コード"].astype(str).str.zfill(4)
     return df.to_dict(orient="records")
