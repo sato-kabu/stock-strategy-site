@@ -1,87 +1,43 @@
+<!-- ファイル名: index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>銘柄検索（予測入力）</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 30px;
-      background: #f9f9f9;
-    }
-    h2 {
-      color: #333;
-    }
-    #search {
-      width: 300px;
-      padding: 8px;
-      font-size: 16px;
-    }
-    #suggestions {
-      width: 300px;
-      border: 1px solid #ccc;
-      background: #fff;
-      max-height: 200px;
-      overflow-y: auto;
-      position: absolute;
-      z-index: 10;
-    }
-    #suggestions div {
-      padding: 6px 10px;
-      cursor: pointer;
-    }
-    #suggestions div:hover {
-      background-color: #eee;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI株価分析</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-white font-sans">
+  <div class="container mx-auto px-4 py-12">
+    <!-- タイトル -->
+    <h1 class="text-5xl font-bold text-center text-blue-400 mb-10">AI株価分析</h1>
 
-  <h2>銘柄コード・名称から検索</h2>
-  <input type="text" id="search" placeholder="例: 7203 や トヨタ" autocomplete="off">
-  <div id="suggestions"></div>
+    <!-- セクション: 機能カード -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- おすすめ銘柄 -->
+      <a href="recommend.html" class="bg-blue-800 hover:bg-blue-700 p-6 rounded-xl shadow-md transition">
+        <h2 class="text-xl font-bold mb-2">📈 現在のおすすめ銘柄</h2>
+        <p>今買うべき注目銘柄をAIが分析して提案します。</p>
+      </a>
 
-  <script>
-    let codes = [];
+      <!-- 保有株と余力資金 -->
+      <a href="portfolio.html" class="bg-green-800 hover:bg-green-700 p-6 rounded-xl shadow-md transition">
+        <h2 class="text-xl font-bold mb-2">💼 保有株と余力資金の入力</h2>
+        <p>現在の資産状況を入力し、売買戦略をAIがアドバイス。</p>
+      </a>
 
-    // 🔽 1. JSON 読み込み（GitHub Pages 上では相対パスで OK）
-    fetch("data/codes.json")
-      .then(response => response.json())
-      .then(data => {
-        codes = data;
-      })
-      .catch(err => {
-        console.error("codes.json の読み込みに失敗しました:", err);
-      });
+      <!-- 銘柄検索（AI分析付き） -->
+      <a href="search.html" class="bg-purple-800 hover:bg-purple-700 p-6 rounded-xl shadow-md transition">
+        <h2 class="text-xl font-bold mb-2">🔍 銘柄検索（AI分析付き）</h2>
+        <p>銘柄コードまたは名前から検索し、今の買い時かをAIが判定。</p>
+      </a>
 
-    // 🔽 2. 入力イベントで候補表示
-    const input = document.getElementById("search");
-    const suggestions = document.getElementById("suggestions");
-
-    input.addEventListener("input", () => {
-      const keyword = input.value.trim();
-      suggestions.innerHTML = "";
-      if (!keyword) return;
-
-      const matched = codes.filter(code => code.includes(keyword)).slice(0, 30);
-      matched.forEach(code => {
-        const div = document.createElement("div");
-        div.textContent = code;
-        div.onclick = () => {
-          input.value = code;
-          suggestions.innerHTML = "";
-        };
-        suggestions.appendChild(div);
-      });
-    });
-
-    // 🔽 3. フォーカス外で候補を消す
-    document.addEventListener("click", (e) => {
-      if (e.target !== input) {
-        suggestions.innerHTML = "";
-      }
-    });
-  </script>
-
+      <!-- 今後追加予定：分析履歴など -->
+      <div class="bg-gray-700 p-6 rounded-xl opacity-50">
+        <h2 class="text-xl font-bold mb-2">🕓 分析履歴（開発中）</h2>
+        <p>これまでの分析結果を振り返る機能を近日公開予定。</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
