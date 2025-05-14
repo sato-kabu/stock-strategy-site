@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">銘柄の簡易分析</h2>
+    <form method="post" action="/analyze">
+        <div class="mb-4">
+            <label for="code" class="block text-gray-700 text-sm font-bold mb-2">銘柄コードまたは名称</label>
+            <input id="code" name="code" type="text" list="codeList"
+                   value="{{ selected }}"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   placeholder="例: 7203 トヨタ">
+            <datalist id="codeList"></datalist>
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                分析実行
+            </button>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="mt-6 p-4 bg-blue-100 border border-blue-300 rounded">
+        <strong>分析結果:</strong> {{ result }}
+    </div>
+    {% endif %}
+
+    {% if financial_info %}
+    <div class="mt-6 p-4 bg-gray-100 border border-gray-300 rounded">
+        <strong>財務指標:</strong><br>
+        <ul class="list-disc list-inside mt-2 text-sm">
+            <li><strong>PER:</strong> {{ financial_info.per if financial_info.per else "―" }}</li>
+            <li><strong>PBR:</strong> {{ financial_info.pbr if financial_info.pbr else "―" }}</li>
+            <li><strong>ROE:</strong> {{ financial_info.roe if financial_info.roe else "―" }}</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<!-- 🔽 Autocomplete Script -->
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+{% endblock %}

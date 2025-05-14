@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/data/scripts/scrape_irbank_all.py", line 2, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'

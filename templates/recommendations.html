@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>おすすめ銘柄 - AI株価分析</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-2">おすすめ銘柄ランキング</h1>
+    <p class="text-sm text-gray-400 mb-6">最終更新日時：{{ last_updated }}</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- 短期銘柄 -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">🚀 短期急騰候補</h2>
+        <table class="w-full text-sm bg-gray-800 rounded-lg overflow-hidden">
+          <thead>
+            <tr class="bg-blue-500">
+              <th class="p-3">順位</th>
+              <th class="p-3">銘柄コード</th>
+              <th class="p-3">会社名</th>
+              <th class="p-3">現在価格</th>
+              <th class="p-3">5日移動平均</th>
+              <th class="p-3">RSI</th>
+              <th class="p-3">上昇確率(%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in short_ranked %}
+            <tr class="text-center">
+              <td class="p-2">{{ loop.index }}</td>
+              <td class="p-2">{{ stock.code }}</td>
+              <td class="p-2">{{ stock.company_name }}</td>
+              <td class="p-2">{{ stock.price }}</td>
+              <td class="p-2">{{ stock.ma5 }}</td>
+              <td class="p-2">{{ "%.2f"|format(stock.rsi) }}</td>
+              <td class="p-2">{{ "%.1f"|format(stock.probability) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 中期銘柄 -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4">📈 中期急騰候補</h2>
+        <table class="w-full text-sm bg-gray-800 rounded-lg overflow-hidden">
+          <thead>
+            <tr class="bg-green-500">
+              <th class="p-3">順位</th>
+              <th class="p-3">銘柄コード</th>
+              <th class="p-3">会社名</th>
+              <th class="p-3">現在価格</th>
+              <th class="p-3">25日移動平均</th>
+              <th class="p-3">RSI</th>
+              <th class="p-3">上昇確率(%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in mid_ranked %}
+            <tr class="text-center">
+              <td class="p-2">{{ loop.index }}</td>
+              <td class="p-2">{{ stock.code }}</td>
+              <td class="p-2">{{ stock.company_name }}</td>
+              <td class="p-2">{{ stock.price }}</td>
+              <td class="p-2">{{ stock.ma25 }}</td>
+              <td class="p-2">{{ "%.2f"|format(stock.rsi) }}</td>
+              <td class="p-2">{{ "%.1f"|format(stock.probability) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 p-4 bg-gray-700 rounded text-sm">
+      <p>🔍 <strong>上昇確率の計算方法について</strong></p>
+      <p class="mt-2">
+        上昇確率は過去のテクニカル指標（移動平均乖離率、RSI、取引量の急増率など）を総合的に評価してAIが算出した数値であり、実際の株価の動きを保証するものではありません。
+      </p>
+      <p class="text-yellow-300 mt-2">
+        ※投資判断は自己責任でお願いします。当サイトの情報を基にした取引によるいかなる損失も責任を負いかねます。
+      </p>
+    </div>
+
+    <div class="mt-6 text-center">
+      <a href="/" class="inline-block px-6 py-2 bg-gray-700 rounded hover:bg-gray-600">ホームに戻る</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/data/scripts/fetch_market_summary.py", line 57, in <module>
+    with open("data/market_summary.json", "w", encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/market_summary.json'
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/data/scripts/fetch_market_summary.py", line 57, in <module>
+    with open("data/market_summary.json", "w", encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/market_summary.json'

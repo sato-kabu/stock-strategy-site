@@ -1,0 +1,275 @@
+[
+  {
+    "code": "1946",
+    "name": "1946 トーエネック",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "1950",
+    "name": "1950 日本電設工業",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "2296",
+    "name": "2296 伊藤ハム米久 HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "2768",
+    "name": "2768 双日",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "4237",
+    "name": "4237 フジプレアム",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "4373",
+    "name": "4373 シンプレクスHD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6615",
+    "name": "6615 ユー・エム・シー・エレクトロニクス",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6697",
+    "name": "6697 テックポイント・インク(Techpoint,Inc.)",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6809",
+    "name": "6809 TOA",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6932",
+    "name": "6932 遠藤照明",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6989",
+    "name": "6989 北陸電気工業",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "7192",
+    "name": "7192 日本モーゲージサービス",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "7419",
+    "name": "7419 ノジマ",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "8056",
+    "name": "8056 BIPROGY",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "8214",
+    "name": "8214 AOKI HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "8737",
+    "name": "8737 あかつき本社",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "9377",
+    "name": "9377 エージーピー",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "9682",
+    "name": "9682 DTS",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "1435",
+    "name": "1435 robot home",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "1783",
+    "name": "1783 fantasista",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "1852",
+    "name": "1852 淺沼組",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "2871",
+    "name": "2871 ニチレイ",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "2980",
+    "name": "2980 SRE HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3034",
+    "name": "3034 クオール HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3046",
+    "name": "3046 ジンズ HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3141",
+    "name": "3141 ウエルシア HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3182",
+    "name": "3182 オイシックス・ラ・大地",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3288",
+    "name": "3288 オープンハウスグループ",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3391",
+    "name": "3391 ツルハ HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3565",
+    "name": "3565 アセンテック",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3661",
+    "name": "3661 エムアップ HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3769",
+    "name": "3769 GMOペイメントゲートウェイ",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "3989",
+    "name": "3989 シェアリングテクノロジー",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "6118",
+    "name": "6118 アイダエンジニアリング",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "8051",
+    "name": "8051 山善",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "8252",
+    "name": "8252 丸井グループ",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "9409",
+    "name": "9409 テレビ朝日 HD",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "9709",
+    "name": "9709 NCS&A",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  },
+  {
+    "code": "9832",
+    "name": "9832 オートバックスセブン",
+    "short_term_probability": null,
+    "mid_term_probability": null,
+    "error": "Error code: 404 - {'error': {'message': 'The model `gpt-4-turbo` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}"
+  }
+]

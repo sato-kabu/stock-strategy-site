@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI株価分析</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- ヘッダー -->
+  <header class="bg-white shadow">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">
+        <a href="/">AI株価分析</a>
+      </h1>
+      <nav class="space-x-4">
+        <a href="/" class="text-gray-700 hover:text-blue-500">トップ</a>
+        <a href="/recommend" class="text-gray-700 hover:text-blue-500">おすすめ銘柄</a>
+        <a href="/portfolio" class="text-gray-700 hover:text-blue-500">保有株入力</a>
+        <a href="/analyze" class="text-gray-700 hover:text-blue-500">銘柄検索</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="container mx-auto px-4 py-8">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- フッター -->
+  <footer class="bg-white text-center py-4 border-t">
+    <p class="text-sm text-gray-500">© 2025 AI株価分析</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
+</body>
+</html>

@@ -1,37 +1,73 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
 import time
 
-def fetch_company_name(code):
+# ラベルに対応する値を抽出する共通関数
+def extract_value_by_label(soup, label):
+    try:
+        dls = soup.find_all("dl", class_="gdl")
+        for dl in dls:
+            dt_tags = dl.find_all("dt")
+            dd_tags = dl.find_all("dd")
+            for dt, dd in zip(dt_tags, dd_tags):
+                if label in dt.get_text(strip=True):
+                    span = dd.find("span", class_="text")
+                    if span:
+                        return span.get_text(strip=True).replace("倍", "").replace("%", "")
+    except Exception as e:
+        print(f"[ERROR] ラベル取得失敗（{label}）: {e}")
+    return None
+
+# 個別銘柄ページから企業データを取得
+def fetch_company_data(code):
     url = f"https://irbank.net/{code}"
     headers = {"User-Agent": "Mozilla/5.0"}
     try:
-        print(f"[INFO] アクセス中: {url}")
         res = requests.get(url, headers=headers, timeout=10)
         res.raise_for_status()
         soup = BeautifulSoup(res.content, "html.parser")
-        h1 = soup.find("h1")
-        if h1:
-            print(f"[SUCCESS] 取得成功: {code} → {h1.text.strip()}")
-        else:
-            print(f"[WARNING] タイトルが見つかりません: {code}")
-        return h1.text.strip() if h1 else None
-    except Exception as e:
-        print(f"[ERROR] {code} の取得に失敗: {e}")
-        return None
 
+        # 企業名取得
+        name_tag = soup.find("h1")
+        name = name_tag.text.strip() if name_tag else None
+
+        # 指標取得（PER（連）、PBR（連）、ROE（連））
+        per = extract_value_by_label(soup, "PER（連）")
+        pbr = extract_value_by_label(soup, "PBR（連）")
+        roe = extract_value_by_label(soup, "ROE（連）")
+
+        return {
+            "code": code,
+            "name": name,
+            "per": per,
+            "pbr": pbr,
+            "roe": roe
+        }
+
+    except Exception as e:
+        print(f"[ERROR] {code} 取得失敗: {e}")
+        return {
+            "code": code,
+            "name": None,
+            "per": None,
+            "pbr": None,
+            "roe": None
+        }
+
+# メイン処理（複数銘柄のデータ取得）
 def main():
-    codes = ["7203", "6758", "9432", "9984"]  # トヨタ、ソニー、NTT、SBG
+    codes = ["7203", "6758", "9432", "9984"]  # 必要に応じて変更可
     results = []
 
     for code in codes:
-        name = fetch_company_name(code)
-        if name:
-            results.append({"code": code, "name": name})
-        time.sleep(1)
+        print(f"[INFO] {code} を取得中...")
+        data = fetch_company_data(code)
+        results.append(data)
+        time.sleep(1)  # 負荷対策のウェイト
 
-    print(f"[INFO] {len(results)} 件の企業情報を取得しました")
+    os.makedirs("data", exist_ok=True)
     with open("data/stocks.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print("[INFO] data/stocks.json に保存しました")

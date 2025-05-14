@@ -1,0 +1,40 @@
+python3: can't open file '/root/data/scripts/fetch_yahoo_technicals.py': [Errno 2] No such file or directory
+[INFO] fetch_yahoo_technicals.py を実行中...
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 20, in <module>
+    run_pipeline()
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 8, in run_pipeline
+    subprocess.run(["python3", "data/scripts/fetch_yahoo_technicals.py"], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python3', 'data/scripts/fetch_yahoo_technicals.py']' returned non-zero exit status 2.
+python3: can't open file '/root/data/scripts/fetch_yahoo_technicals.py': [Errno 2] No such file or directory
+[INFO] fetch_yahoo_technicals.py を実行中...
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 20, in <module>
+    run_pipeline()
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 8, in run_pipeline
+    subprocess.run(["python3", "data/scripts/fetch_yahoo_technicals.py"], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python3', 'data/scripts/fetch_yahoo_technicals.py']' returned non-zero exit status 2.
+python3: can't open file '/root/data/scripts/fetch_yahoo_technicals.py': [Errno 2] No such file or directory
+[INFO] fetch_yahoo_technicals.py を実行中...
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 20, in <module>
+    run_pipeline()
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 8, in run_pipeline
+    subprocess.run(["python3", "data/scripts/fetch_yahoo_technicals.py"], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python3', 'data/scripts/fetch_yahoo_technicals.py']' returned non-zero exit status 2.
+python3: can't open file '/root/data/scripts/fetch_yahoo_technicals.py': [Errno 2] No such file or directory
+[INFO] fetch_yahoo_technicals.py を実行中...
+Traceback (most recent call last):
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 20, in <module>
+    run_pipeline()
+  File "/root/stock-strategy-site/fetch_and_merge_yahoo.py", line 8, in run_pipeline
+    subprocess.run(["python3", "data/scripts/fetch_yahoo_technicals.py"], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python3', 'data/scripts/fetch_yahoo_technicals.py']' returned non-zero exit status 2.
