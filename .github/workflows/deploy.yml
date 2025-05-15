@@ -3,7 +3,7 @@ name: Deploy to VPS (Flask App)
 on:
   push:
     branches:
-      - main  # メインブランチへの変更を検知して自動実行します。
+      - main
 
 jobs:
   deploy:
@@ -20,7 +20,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/stock-strategy-site
-            git pull origin main
+            git pull origin main || true
             source venv/bin/activate
-            pip install -r requirements.txt
-            sudo systemctl restart flaskapp.service
+            if [ -f requirements.txt ]; then
+              pip install -r requirements.txt
+            else
+              echo "requirements.txt not found, skipping pip install."
+            fi
+            sudo systemctl restart flask-stock-site.service || echo "Flask service restart failed."
