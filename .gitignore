@@ -1,1 +1,9 @@
+data/clean_results/*
+data/ocr_results/*
+data/merged_*.json
+data/ranked_*.json
+data/screened_yahoo_*.json
+data/yahoo_technicals.json
+data/market_summary.json
+logs/*
 venv/
