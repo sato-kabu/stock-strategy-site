@@ -1,76 +1,30 @@
-依頼に基づいて、最新ニュースを表示するためのHTMLコードを提案します。この機能を実装するためには、HTMLに加えてJavaScriptを使用してニュースデータを動的に取得し表示する方法を取り入れます。以下はその一例です。
+このエラーメッセージは、指定されたパスにファイルが存在しないことを示しています。エラーを修正するためには、以下のステップを踏む必要があります。
 
-### HTML部分
-```html
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>トップページ</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>ウェブサイトのタイトル</h1>
-        <nav>
-            <!-- ナビゲーションメニュー -->
-        </nav>
-    </header>
-    <main>
-        <section id="news">
-            <h2>最新ニュース</h2>
-            <ul id="news-list">
-                <!-- ニュース項目がここに挿入されます -->
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <!-- フッター情報 -->
-    </footer>
-    <script src="scripts.js"></script>
-</body>
-</html>
+1. **ファイルの存在確認**: 指定されたパスにファイルが実際に存在するかどうかを確認します。
+2. **正しいパスの設定**: ファイルが別の場所にある場合は、正しいパスを指定します。
+3. **スクリプトの実行**: 修正後のパスでスクリプトを再度実行してみます。
+
+### 具体的なコードの提案
+
+まずは、ターミナルやコマンドプロンプトを開いて、以下のコマンドを実行してファイルが存在するかどうかを確認します。
+
+```bash
+ls /home/runner/work/stock-strategy-site/stock-strategy-site/data/scripts/
 ```
 
-### JavaScript部分 (scripts.js)
-```javascript
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('https://api.example.com/latest-news') // 仮のAPIエンドポイント
-        .then(response => response.json())
-        .then(data => {
-            const newsList = document.getElementById('news-list');
-            data.forEach(news => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${news.title} - ${news.date}`;
-                newsList.appendChild(listItem);
-            });
-        })
-        .catch(error => console.error('Error loading the news:', error));
-});
+このコマンドで `ai_auto_update.py` がリストに含まれていなければ、ファイルが存在しないか、異なる場所にあることがわかります。ファイルが存在しない場合は、ファイルを適切な場所に配置する必要があります。
+
+もしファイルが異なるディレクトリにある場合は、その正確なパスを見つけ出してください。例えば、ファイルが `scripts` ディレクトリの一つ上の階層にある場合、以下のようにパスを修正します。
+
+```bash
+python /home/runner/work/stock-strategy-site/stock-strategy-site/data/ai_auto_update.py
 ```
 
-### CSS部分 (styles.css)
-```css
-#news {
-    margin: 20px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-}
+また、Python スクリプトを実行する際には、作業ディレクトリが正しいことを確認するために、Python スクリプトを実行する前に `cd` コマンドでディレクトリを変更することもできます。
 
-#news h2 {
-    color: #333;
-}
-
-#news-list li {
-    margin-bottom: 5px;
-    list-style-type: none;
-}
+```bash
+cd /home/runner/work/stock-strategy-site/stock-strategy-site/data
+python scripts/ai_auto_update.py
 ```
 
-### 説明
-1. **HTML**: `#news-list`というIDを持つ`<ul>`タグを用意して、ニュース項目を動的に挿入します。
-2. **JavaScript**: DOMが読み込まれた後、指定されたAPIから最新ニュースのデータを取得し、それをリストとして表示します。ここでは`fetch`を使用してAPIからデータを取得しています。
-3. **CSS**: ニュースセクションのスタイリングを行います。背景色、境界線、テキストの色などを設定しています。
-
-このコードは、サーバーからニュースデータを取得するAPIが存在することを前提としています。APIのURLは適切なものに置き換える必要があります。また、エラーハンドリングも含めており、APIからのデータ取得に失敗した場合にはコンソールにエラーが表示されます。
+これらのステップを試して、問題が解決するかどうかを確認してください。
