@@ -3,6 +3,11 @@ from openai import OpenAI
 import subprocess
 import datetime
 
+- name: AIによるサイト自動修復（Pythonスクリプトを実行）
+  env:
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  run: python data/scripts/ai_auto_update.py
+
 # 環境変数からOpenAI APIキーの取得
 api_key = os.getenv("OPENAI_API_KEY")
 if api_key is None:
