@@ -1,75 +1,65 @@
-以下の手順で、`app.py`の`/recommend`ルートを修正して、ロジスティック回帰モデルを用いた現実的な上昇確率の計算に変更することができます。
+依頼に基づいて、最新ニュースを動的に表示するためのHTML、CSS、およびJavaScriptのコードを提案します。この例では、JavaScriptを使用してサーバーからニュースデータを取得し、HTMLに動的に表示します。サーバーからのデータ取得は、ここでは簡単な配列として模擬しますが、実際にはAPIからのデータ取得に置き換えることができます。
 
-### 1. 必要なライブラリをインポート
-
-まず、必要なライブラリをインポートします。これには`pandas`、`numpy`、`sklearn`の一部が含まれます。
-
-```python
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from flask import Flask, request, jsonify
+### HTML (index.html)
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>トップページ - 最新ニュース</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>最新ニュース</h1>
+    <div id="news-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>
 ```
 
-### 2. データの読み込みと前処理
+### CSS (styles.css)
+```css
+#news-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
 
-`historical_data.csv`からデータを読み込み、必要な前処理を行います。
+.news-item {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
 
-```python
-# データの読み込み
-data = pd.read_csv('historical_data.csv')
-
-# 特徴量とターゲットに分割
-X = data.drop('target', axis=1)
-y = data['target']
-
-# データのスケーリング
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+.news-item:last-child {
+    border-bottom: none;
+}
 ```
 
-### 3. モデルの訓練
+### JavaScript (script.js)
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    const newsContainer = document.getElementById('news-container');
 
-ロジスティック回帰モデルを訓練します。
+    // ここでAPIからデータを取得する想定。ここでは静的な配列を使用。
+    const newsData = [
+        { title: "ニュースタイトル1", content: "ニュース内容1" },
+        { title: "ニュースタイトル2", content: "ニュース内容2" },
+        { title: "ニュースタイトル3", content: "ニュース内容3" }
+    ];
 
-```python
-# 訓練データとテストデータに分割
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-# モデルの訓練
-model = LogisticRegression()
-model.fit(X_train, y_train)
+    newsData.forEach(news => {
+        const newsItem = document.createElement('div');
+        newsItem.classList.add('news-item');
+        newsItem.innerHTML = `<h2>${news.title}</h2><p>${news.content}</p>`;
+        newsContainer.appendChild(newsItem);
+    });
+});
 ```
 
-### 4. Flaskアプリケーションでのルートの設定
+### 説明
+- **HTML**: ニュースを表示するためのコンテナ (`<div id="news-container"></div>`) を設定します。
+- **CSS**: ニュースアイテムのスタイリングを行います。各ニュースアイテムは `news-item` クラスを持ちます。
+- **JavaScript**: DOMが読み込まれた後、ニュースデータを取得し、それを `news-container` に動的に追加します。この例では静的な配列を使用していますが、実際には外部APIからデータを取得することが想定されています。
 
-Flaskアプリケーションに`/recommend`ルートを設定し、リクエストから受け取ったデータに基づいて予測を行い、結果を返します。
-
-```python
-app = Flask(__name__)
-
-@app.route('/recommend', methods=['POST'])
-def recommend():
-    # リクエストからデータを取得
-    input_data = request.json
-    input_df = pd.DataFrame([input_data])
-
-    # データのスケーリング
-    input_scaled = scaler.transform(input_df)
-
-    # 予測の実行
-    prediction_proba = model.predict_proba(input_scaled)[0][1]
-
-    # 確率をJSON形式で返す
-    return jsonify({'probability': prediction_proba})
-
-if __name__ == '__main__':
-    app.run(debug=True)
-```
-
-### 5. アプリケーションのテスト
-
-このコードを`app.py`に実装した後、適切なリクエストを送信して動作を確認します。例えば、Postmanやcurlを使用してPOSTリクエストを送信し、予測結果が返されるかをテストします。
-
-以上の手順で、`app.py`の`/recommend`ルートをロジスティック回帰モデルを使用した予測に更新することができます。このモデルは、提供された`historical_data.csv`を基に訓練され、リアルタイムでの予測に利用されます。
+このコードは、トップページに最新ニュースを動的に表示する基本的な構造を提供します。ニュースデータのソースを実際のAPIに変更することで、リアルタイムの更新が可能になります。
