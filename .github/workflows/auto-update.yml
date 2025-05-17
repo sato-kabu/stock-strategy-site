@@ -28,6 +28,7 @@ jobs:
       - name: AIによるサイト自動修復（Pythonスクリプトを実行）
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TASK_DESCRIPTION: "サイトのトップページの最新ニュースを動的に表示するHTMLコードを生成してください"
         run: python data/scripts/ai_auto_update.py
 
       - name: サーバーへのデプロイ（コード更新）
