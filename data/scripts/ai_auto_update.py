@@ -46,14 +46,13 @@ def create_branch_and_push(suggestion):
 
 # メイン関数
 if __name__ == "__main__":
-    task = input("AIに依頼したい内容を入力してください: ")
+    task = os.getenv("TASK_DESCRIPTION")
+    if not task:
+        raise ValueError("TASK_DESCRIPTION is not set in environment variables.")
+
     suggestion = generate_ai_suggestion(task)
     print("[INFO] AIの提案内容を生成しました。\n")
     print(suggestion)
 
-    proceed = input("\nこの提案をGitHubに送信してPRを作成しますか？ (y/n): ")
-    if proceed.lower() == 'y':
-        create_branch_and_push(suggestion)
-        print("[INFO] GitHubにブランチを作成し、PRを作成しました。")
-    else:
-        print("[INFO] PR作成を中止しました。")
+    create_branch_and_push(suggestion)
+    print("[INFO] GitHubにブランチを作成し、PRを作成しました。")
