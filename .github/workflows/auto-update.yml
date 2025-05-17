@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: チェックアウト
         uses: actions/checkout@v4
+ 　　　　with:
+    　　　fetch-depth: 0  # これを追加！
 
       - name: Pythonセットアップ
         uses: actions/setup-python@v5
