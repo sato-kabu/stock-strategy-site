@@ -22,7 +22,8 @@ jobs:
       - name: 依存関係のインストール
         run: |
           python -m pip install --upgrade pip
-          pip install openai requests beautifulsoup4
+          pip install -r requirements.txt
+          pip install openai requests beautifulsoup4 pyyaml
 
       - name: AIによるサイト自動修復（Pythonスクリプトを実行）
         env:
