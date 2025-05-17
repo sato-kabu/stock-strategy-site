@@ -2,18 +2,18 @@ import os
 from openai import OpenAI
 import subprocess
 import datetime
-import yaml
 
-# OpenAI APIキーの読み込み
-with open("data/scripts/config.yaml") as file:
-    config = yaml.safe_load(file)
+# 環境変数からOpenAI APIキーの取得
+api_key = os.getenv("OPENAI_API_KEY")
+if api_key is None:
+    raise ValueError("環境変数 'OPENAI_API_KEY' が設定されていません。")
 
-client = OpenAI(api_key=config["OPENAI_API_KEY"])
+client = OpenAI(api_key=api_key)
 
 # ChatGPTで提案を生成する関数（新API対応）
 def generate_ai_suggestion(task_description):
     prompt = f"以下の依頼に従って、サイトの修正をするための具体的なコードを提案してください。\n\n依頼: {task_description}\n\n### 提案内容:"
-    
+
     response = client.chat.completions.create(
         model="gpt-4-turbo",
         messages=[{"role": "user", "content": prompt}],
@@ -29,7 +29,7 @@ def create_branch_and_push(suggestion):
     branch_name = f"ai-update-{timestamp}"
 
     subprocess.run(["git", "checkout", "-b", branch_name])
-    
+
     # 提案内容をHTMLファイルとして保存
     filename = "templates/latest_news.html"
     with open(filename, "w") as f:
