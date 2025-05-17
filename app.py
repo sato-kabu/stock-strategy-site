@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import json
 import os
 from datetime import datetime
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+import joblib
 
 app = Flask(__name__)
 
@@ -39,10 +43,20 @@ def recommendations():
         short_path = "data/ranked_short.json"
         with open(short_path, "r", encoding="utf-8") as f:
             short_ranked = json.load(f)
-            short_ranked.sort(key=lambda x: x.get('probability', 0), reverse=True)
-            short_updated = datetime.fromtimestamp(
-                os.path.getmtime(short_path)
-            ).strftime("%Y-%m-%d %H:%M:%S")
+
+        features_df = pd.read_json("data/latest_features.json")
+        model = joblib.load("data/models/logistic_model.pkl")
+
+        for item in short_ranked:
+            code = item['code']
+            features = features_df.loc[features_df['code'] == code].iloc[0, 1:].values.reshape(1, -1)
+            probability = model.predict_proba(features)[0][1]
+            item['probability'] = round(probability * 100, 2)
+
+        short_ranked.sort(key=lambda x: x.get('probability', 0), reverse=True)
+        short_updated = datetime.fromtimestamp(
+            os.path.getmtime(short_path)
+        ).strftime("%Y-%m-%d %H:%M:%S")
     except Exception as e:
         print("[ERROR] 短期ランキング読み込み失敗", e)
 
@@ -50,10 +64,20 @@ def recommendations():
         mid_path = "data/ranked_mid.json"
         with open(mid_path, "r", encoding="utf-8") as f:
             mid_ranked = json.load(f)
-            mid_ranked.sort(key=lambda x: x.get('probability', 0), reverse=True)
-            mid_updated = datetime.fromtimestamp(
-                os.path.getmtime(mid_path)
-            ).strftime("%Y-%m-%d %H:%M:%S")
+
+        features_df = pd.read_json("data/latest_features.json")
+        model = joblib.load("data/models/logistic_model.pkl")
+
+        for item in mid_ranked:
+            code = item['code']
+            features = features_df.loc[features_df['code'] == code].iloc[0, 1:].values.reshape(1, -1)
+            probability = model.predict_proba(features)[0][1]
+            item['probability'] = round(probability * 100, 2)
+
+        mid_ranked.sort(key=lambda x: x.get('probability', 0), reverse=True)
+        mid_updated = datetime.fromtimestamp(
+            os.path.getmtime(mid_path)
+        ).strftime("%Y-%m-%d %H:%M:%S")
     except Exception as e:
         print("[ERROR] 中期ランキング読み込み失敗", e)
 
