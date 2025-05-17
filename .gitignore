@@ -7,3 +7,4 @@ data/yahoo_technicals.json
 data/market_summary.json
 logs/*
 venv/
+data/scripts/config.yaml
