@@ -1,66 +1,75 @@
-依頼内容に基づいて、上昇確率の算出方法を見直し、より現実的な確率を表示するためのコード修正を提案します。まずは、どのような根拠やデータを基に上昇確率が計算されているのかを確認し、その計算方法を修正する必要があります。
+以下の手順で、`app.py`の`/recommend`ルートを修正して、ロジスティック回帰モデルを用いた現実的な上昇確率の計算に変更することができます。
 
-### ステップ1: 現在の計算方法の確認
-まずは、現在のウェブサイトのコードを確認して、どのように上昇確率が計算されているかを理解します。これには、バックエンドのソースコードを見る必要があります。PythonとFlaskが使われている場合の一般的なコードは以下のようになります。
+### 1. 必要なライブラリをインポート
+
+まず、必要なライブラリをインポートします。これには`pandas`、`numpy`、`sklearn`の一部が含まれます。
 
 ```python
-from flask import Flask, render_template, request
-import some_prediction_model
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from flask import Flask, request, jsonify
+```
 
+### 2. データの読み込みと前処理
+
+`historical_data.csv`からデータを読み込み、必要な前処理を行います。
+
+```python
+# データの読み込み
+data = pd.read_csv('historical_data.csv')
+
+# 特徴量とターゲットに分割
+X = data.drop('target', axis=1)
+y = data['target']
+
+# データのスケーリング
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+```
+
+### 3. モデルの訓練
+
+ロジスティック回帰モデルを訓練します。
+
+```python
+# 訓練データとテストデータに分割
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# モデルの訓練
+model = LogisticRegression()
+model.fit(X_train, y_train)
+```
+
+### 4. Flaskアプリケーションでのルートの設定
+
+Flaskアプリケーションに`/recommend`ルートを設定し、リクエストから受け取ったデータに基づいて予測を行い、結果を返します。
+
+```python
 app = Flask(__name__)
 
-@app.route('/recommend')
+@app.route('/recommend', methods=['POST'])
 def recommend():
-    # データの取得
-    data = request.args.get('data')
-    
-    # 上昇確率の計算
-    probability = some_prediction_model.calculate_probability(data)
-    
-    return render_template('recommend.html', probability=probability)
+    # リクエストからデータを取得
+    input_data = request.json
+    input_df = pd.DataFrame([input_data])
+
+    # データのスケーリング
+    input_scaled = scaler.transform(input_df)
+
+    # 予測の実行
+    prediction_proba = model.predict_proba(input_scaled)[0][1]
+
+    # 確率をJSON形式で返す
+    return jsonify({'probability': prediction_proba})
+
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### ステップ2: 上昇確率の計算方法の修正
-上昇確率が現実的でないという問題がある場合、計算方法を見直す必要があります。例えば、確率を計算するモデルが過去のデータに過剰にフィットしている（過学習）かもしれません。以下に、より堅牢な計算方法に修正するためのコードの例を示します。
+### 5. アプリケーションのテスト
 
-```python
-import some_prediction_model
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+このコードを`app.py`に実装した後、適切なリクエストを送信して動作を確認します。例えば、Postmanやcurlを使用してPOSTリクエストを送信し、予測結果が返されるかをテストします。
 
-def update_model(data):
-    # データをトレーニングセットとテストセットに分割
-    train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
-    
-    # モデルのトレーニング
-    model = some_prediction_model.train(train_data)
-    
-    # テストデータでモデルを評価
-    predictions = model.predict(test_data)
-    accuracy = accuracy_score(test_data['actual'], predictions)
-    
-    return model, accuracy
-
-# モデルの更新と評価
-updated_model, model_accuracy = update_model(data)
-```
-
-### ステップ3: フロントエンドの表示を更新
-最後に、フロントエンドで表示される確率が更新されたモデルに基づいていることを確認します。HTMLテンプレートを更新して、新しい確率とモデルの精度を表示するようにします。
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recommendation</title>
-</head>
-<body>
-    <h1>推薦システム</h1>
-    <p>上昇確率: {{ probability }}%</p>
-    <p>モデル精度: {{ accuracy }}%</p>
-</body>
-</html>
-```
-
-これらのステップを通じて、より現実的な上昇確率をユーザーに提供することができます。
+以上の手順で、`app.py`の`/recommend`ルートをロジスティック回帰モデルを使用した予測に更新することができます。このモデルは、提供された`historical_data.csv`を基に訓練され、リアルタイムでの予測に利用されます。
