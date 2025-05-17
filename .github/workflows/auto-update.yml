@@ -2,9 +2,9 @@ name: Auto Update and Deploy Website
 
 on:
   push:
-    branches: [ main ] # mainブランチにpush時に実行
+    branches: [ main ]  # mainブランチにpush時に実行
   schedule:
-    - cron: '0 18 * * *' # 日本時間の朝3時に実行
+    - cron: '0 18 * * *'  # 日本時間の朝3時に実行
 
 jobs:
   deploy:
@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: チェックアウト
         uses: actions/checkout@v4
- 　　　　with:
-    　　　fetch-depth: 0  # これを追加！
+        with:
+          fetch-depth: 0  # ← インデントを修正！
 
       - name: Pythonセットアップ
         uses: actions/setup-python@v5
