@@ -28,31 +28,36 @@ def create_branch_and_push(suggestion):
     timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     branch_name = f"ai-update-{timestamp}"
 
-    subprocess.run(["git", "checkout", "-b", branch_name])
+    subprocess.run(["git", "checkout", "-b", branch_name], check=True)
 
     # 提案内容をHTMLファイルとして保存
     filename = "templates/latest_news.html"
     with open(filename, "w") as f:
         f.write(suggestion)
 
-    subprocess.run(["git", "add", filename])
-    subprocess.run(["git", "commit", "-m", f"AI自動提案: {timestamp}"])
-    subprocess.run(["git", "push", "--set-upstream", "origin", branch_name])
+    subprocess.run(["git", "add", filename], check=True)
+    subprocess.run(["git", "commit", "-m", f"AI自動提案: {timestamp}"], check=True)
+    subprocess.run(["git", "push", "--set-upstream", "origin", branch_name], check=True)
 
     subprocess.run([
         "gh", "pr", "create", "--title", f"AI自動提案: {timestamp}",
         "--body", suggestion
-    ])
+    ], check=True)
 
 # メイン関数
 if __name__ == "__main__":
-    task = input("AIに依頼したい内容を入力してください: ")
+    # 環境変数からタスクを取得
+    task = os.getenv("AI_TASK")
+    if not task:
+        raise ValueError("環境変数 'AI_TASK' が設定されていません。")
+
     suggestion = generate_ai_suggestion(task)
     print("[INFO] AIの提案内容を生成しました。\n")
     print(suggestion)
 
-    proceed = input("\nこの提案をGitHubに送信してPRを作成しますか？ (y/n): ")
-    if proceed.lower() == 'y':
+    # PR作成の確認（デフォルトは 'n'）
+    proceed = os.getenv("PROCEED_PR", "n").lower()
+    if proceed == 'y':
         create_branch_and_push(suggestion)
         print("[INFO] GitHubにブランチを作成し、PRを作成しました。")
     else:
