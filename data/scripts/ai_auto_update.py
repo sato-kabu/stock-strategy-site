@@ -4,7 +4,7 @@ import subprocess
 import datetime
 
 # 環境変数からOpenAI APIキーの取得
-api_key = os.getenv["OPENAI_API_KEY"]
+api_key = os.getenv("OPENAI_API_KEY")
 if api_key is None:
     raise ValueError('環境変数 "OPENAI_API_KEY" が設定されていません。')
 
