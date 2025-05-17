@@ -1,30 +1,66 @@
-このエラーメッセージは、指定されたパスにファイルが存在しないことを示しています。エラーを修正するためには、以下のステップを踏む必要があります。
+依頼内容に基づいて、上昇確率の算出方法を見直し、より現実的な確率を表示するためのコード修正を提案します。まずは、どのような根拠やデータを基に上昇確率が計算されているのかを確認し、その計算方法を修正する必要があります。
 
-1. **ファイルの存在確認**: 指定されたパスにファイルが実際に存在するかどうかを確認します。
-2. **正しいパスの設定**: ファイルが別の場所にある場合は、正しいパスを指定します。
-3. **スクリプトの実行**: 修正後のパスでスクリプトを再度実行してみます。
+### ステップ1: 現在の計算方法の確認
+まずは、現在のウェブサイトのコードを確認して、どのように上昇確率が計算されているかを理解します。これには、バックエンドのソースコードを見る必要があります。PythonとFlaskが使われている場合の一般的なコードは以下のようになります。
 
-### 具体的なコードの提案
+```python
+from flask import Flask, render_template, request
+import some_prediction_model
 
-まずは、ターミナルやコマンドプロンプトを開いて、以下のコマンドを実行してファイルが存在するかどうかを確認します。
+app = Flask(__name__)
 
-```bash
-ls /home/runner/work/stock-strategy-site/stock-strategy-site/data/scripts/
+@app.route('/recommend')
+def recommend():
+    # データの取得
+    data = request.args.get('data')
+    
+    # 上昇確率の計算
+    probability = some_prediction_model.calculate_probability(data)
+    
+    return render_template('recommend.html', probability=probability)
 ```
 
-このコマンドで `ai_auto_update.py` がリストに含まれていなければ、ファイルが存在しないか、異なる場所にあることがわかります。ファイルが存在しない場合は、ファイルを適切な場所に配置する必要があります。
+### ステップ2: 上昇確率の計算方法の修正
+上昇確率が現実的でないという問題がある場合、計算方法を見直す必要があります。例えば、確率を計算するモデルが過去のデータに過剰にフィットしている（過学習）かもしれません。以下に、より堅牢な計算方法に修正するためのコードの例を示します。
 
-もしファイルが異なるディレクトリにある場合は、その正確なパスを見つけ出してください。例えば、ファイルが `scripts` ディレクトリの一つ上の階層にある場合、以下のようにパスを修正します。
+```python
+import some_prediction_model
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-```bash
-python /home/runner/work/stock-strategy-site/stock-strategy-site/data/ai_auto_update.py
+def update_model(data):
+    # データをトレーニングセットとテストセットに分割
+    train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
+    
+    # モデルのトレーニング
+    model = some_prediction_model.train(train_data)
+    
+    # テストデータでモデルを評価
+    predictions = model.predict(test_data)
+    accuracy = accuracy_score(test_data['actual'], predictions)
+    
+    return model, accuracy
+
+# モデルの更新と評価
+updated_model, model_accuracy = update_model(data)
 ```
 
-また、Python スクリプトを実行する際には、作業ディレクトリが正しいことを確認するために、Python スクリプトを実行する前に `cd` コマンドでディレクトリを変更することもできます。
+### ステップ3: フロントエンドの表示を更新
+最後に、フロントエンドで表示される確率が更新されたモデルに基づいていることを確認します。HTMLテンプレートを更新して、新しい確率とモデルの精度を表示するようにします。
 
-```bash
-cd /home/runner/work/stock-strategy-site/stock-strategy-site/data
-python scripts/ai_auto_update.py
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendation</title>
+</head>
+<body>
+    <h1>推薦システム</h1>
+    <p>上昇確率: {{ probability }}%</p>
+    <p>モデル精度: {{ accuracy }}%</p>
+</body>
+</html>
 ```
 
-これらのステップを試して、問題が解決するかどうかを確認してください。
+これらのステップを通じて、より現実的な上昇確率をユーザーに提供することができます。
