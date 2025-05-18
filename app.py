@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 import joblib
+import pickle
+from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
@@ -89,6 +91,28 @@ def recommendations():
         mid_ranked=mid_ranked,
         last_updated=last_updated
     )
+
+@app.route("/api/recommend", methods=["POST"])
+def recommend_api():
+    try:
+        # 入力データの取得
+        input_data = request.get_json()
+        input_df = pd.DataFrame([input_data])
+
+        # モデルとスケーラーの読み込み
+        with open("model.pkl", "rb") as f:
+            model = pickle.load(f)
+        with open("scaler.pkl", "rb") as f:
+            scaler = pickle.load(f)
+
+        # データのスケーリングと予測
+        input_scaled = scaler.transform(input_df)
+        probability = model.predict_proba(input_scaled)[0][1]
+
+        return jsonify({"probability": round(probability, 4)})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/portfolio", methods=["GET", "POST"])
 def portfolio():
