@@ -1,47 +1,43 @@
-依頼に基づいて、より詳細で正確な予測を提供するために以下の修正を提案します。この修正は、予測アルゴリズムの改善とフロントエンドの表示方法の両方に関わります。
+依頼に基づいて、recommend画面に表示される「上昇確率」の表記を変更するための具体的なコードの修正を提案します。ただし、具体的な実装の詳細（使用している言語やフレームワーク、データソースなど）が不明なため、一般的なHTMLとJavaScriptを使った例を示します。もしバックエンドでの計算やデータベースの更新が必要な場合、それに応じた追加の情報が必要です。
 
-#### 1. 予測アルゴリズムの改善
+### HTMLの修正:
+まず、HTMLファイルで「上昇確率」を表示する部分を見つけます。以下はその部分の一例です。
 
-- **データの品質向上**: 予測の精度を高めるために、より多くの歴史データや市場の動向を考慮する。
-- **機械学習モデルの導入**: 現在の単純な統計モデルから、時系列予測に適した機械学習モデルへの移行を検討します。例えば、ARIMA（自己回帰和分移動平均モデル）やLSTM（長短期記憶ネットワーク）が候補です。
-- **パラメータの最適化**: モデルのハイパーパラメータをチューニングして、最適な予測結果を得る。
-
-#### 2. フロントエンドの表示方法の変更
-
-- **表示形式の変更**: 現在の「100%上昇」という表示から、「XX日までにYY%上昇する確率はZZ%」という形式に変更します。
-- **日付と確率の精度設定**: 予測のターゲットとなる日付は、短期（1週間後）、中期（1ヶ月後）、長期（3ヶ月後）の3つの期間で提供します。確率は整数値ではなく、小数点第二位まで表示することで、より精緻な情報を提供します。
-
-#### 具体的なコードの変更案（Python Flaskと仮定）
-
-```python
-from flask import Flask, jsonify
-import your_prediction_model  # 予測モデルをインポート
-
-app = Flask(__name__)
-
-@app.route('/recommend')
-def recommend():
-    # 予測モデルからデータを取得
-    predictions = your_prediction_model.get_predictions()
-    results = []
-    for prediction in predictions:
-        # 日付、予測上昇率、確率を計算
-        date = prediction['target_date']
-        increase_percent = prediction['increase_percent']
-        probability = prediction['probability']
-        
-        # 結果を整形
-        result = f"{date}までに{increase_percent:.2f}%上昇する確率は{probability:.2f}%です。"
-        results.append(result)
-    
-    return jsonify(results)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+```html
+<div id="probabilityDisplay">上昇確率: <span id="probabilityValue">XX%</span></div>
 ```
 
-#### 注意点
-- `your_prediction_model`は、実際の予測モデルの実装に置き換える必要があります。
-- 予測データの構造（`predictions`の中の`target_date`, `increase_percent`, `probability`）は、実際のデータ構造に合わせて調整してください。
+### JavaScriptの修正:
+次に、この確率を計算し、表示するJavaScriptのコードを修正します。以下に示すのは、特定の日付までの上昇確率を計算し、更新する関数の例です。
 
-この提案により、ユーザーはより詳細で信頼性の高い情報を得ることができ、サイトの信頼性とユーザー満足度が向上すると考えられます。
+```javascript
+// 仮定: calculateProbabilityは、特定の日付までの上昇確率を計算する関数
+function updateProbability() {
+    const targetDate = new Date('May 20, 2023');
+    const today = new Date();
+    const daysUntilTarget = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+
+    if (daysUntilTarget >= 0) {
+        const probability = calculateProbability(daysUntilTarget);
+        document.getElementById('probabilityValue').innerText = `${probability}%`;
+        document.getElementById('probabilityDisplay').innerText = `5月20日までに10%以上上がる確率: ${probability}%`;
+    } else {
+        document.getElementById('probabilityDisplay').innerText = '指定日付は過去です';
+    }
+}
+
+// この関数はサーバーからデータを取得するか、何らかのロジックに基づいて確率を計算する必要があります。
+function calculateProbability(daysUntilTarget) {
+    // ここに確率計算のロジックを実装
+    return Math.random() * 100; // 仮の計算
+}
+
+// ページ読み込み時に確率を更新
+document.addEventListener('DOMContentLoaded', updateProbability);
+```
+
+### 補足:
+- `calculateProbability` 関数は、実際の確率計算のロジックに置き換える必要があります。これはサーバーサイドからのデータ取得や、既存の確率計算アルゴリズムに基づくかもしれません。
+- 上記のコードは、ページが読み込まれるたびに確率を更新します。リアルタイムでの更新が必要な場合は、WebSocketなどを使用してリアルタイムに確率を更新する設計を検討する必要があります。
+
+この提案が依頼に沿ったものであるか、またその他の技術的要件については、さらに情報を提供いただければ、より具体的な提案が可能です。
