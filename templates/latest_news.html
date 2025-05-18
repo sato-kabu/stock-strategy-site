@@ -1,70 +1,70 @@
-依頼の内容に基づいて、ウェブサイトの `/recommend` ページで最終更新日時が即時反映されるように改善するためのコードを提案します。また、利用者がより理解しやすいように、更新日時の説明とプレビュー画像を表示する機能も追加します。
+依頼の内容に基づいて、Flaskアプリケーションのテンプレートとルートを修正するための具体的なコードを以下に示します。この提案では、Flaskの基本的な構造を使用して、特定のURL（`/` と `/recommend`）にアクセスした際にテンプレートが適切に表示されるようにします。
 
-### 技術的なアプローチ:
-1. **最終更新日時の即時反映**
-   - サーバーサイドでファイルやデータベースの最終更新時刻を取得し、クライアントに送信します。
-   - フロントエンドはこの情報を受け取り、ページに表示します。
+### 1. Flaskアプリケーションのセットアップ
 
-2. **更新日時の説明とプレビュー画像の表示**
-   - 更新日時の横にツールチップまたは小さなアイコンを設置し、マウスオーバーまたはクリックで説明をポップアップ表示します。
-   - 更新内容のプレビュー画像を表示するためのスライダーまたはギャラリーを設置します。
-
-### 具体的なコード例:
-
-#### サーバーサイド (Python Flaskを例として)
+まず、Flaskアプリケーションをセットアップします。以下のコードを `app.py` というファイルに記述してください。
 
 ```python
-from flask import Flask, jsonify
-import os
-import datetime
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 @app.route('/recommend')
 def recommend():
-    # ファイルの最終更新時刻を取得
-    timestamp = os.path.getmtime("path/to/recommend/data")
-    last_modified = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    # この例ではJSON形式で日時をクライアントに送信
-    return jsonify(last_updated=last_modified)
+    return render_template('recommend.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
 ```
 
-#### クライアントサイド (HTML + JavaScript)
+### 2. HTMLテンプレートの作成
 
+次に、Flaskアプリケーションで使用する2つのHTMLテンプレートを作成します。これらのファイルは `templates` ディレクトリ内に配置します。
+
+- `index.html` (ホームページ用)
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recommend Page</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Home Page</title>
 </head>
 <body>
-    <div id="update-info">
-        最終更新日時: <span id="last-updated">読み込み中...</span>
-        <img src="info_icon.png" alt="info" style="width:20px;height:20px;" onmouseover="showTooltip()">
-    </div>
-    <div id="tooltip" style="display:none;">この日時はページの内容が最後に更新された時刻です。</div>
-    <script>
-        $(document).ready(function() {
-            $.getJSON('/recommend', function(data) {
-                $('#last-updated').text(data.last_updated);
-            });
-        });
-
-        function showTooltip() {
-            $('#tooltip').show();
-        }
-    </script>
+    <h1>Welcome to Our Website!</h1>
+    <p>This is the home page.</p>
 </body>
 </html>
 ```
 
-### 説明:
-- サーバーサイドのコードは、指定されたデータの最終更新時刻を取得し、それをJSON形式でクライアントに送信します。
-- クライアントサイドのコードは、このJSONデータを受け取り、ページに表示します。また、情報アイコンにマウスを合わせると説明が表示されるようになっています。
+- `recommend.html` (推薦ページ用)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendation Page</title>
+</head>
+<body>
+    <h1>Recommendations</h1>
+    <p>Here are your recommendations.</p>
+</body>
+</html>
+```
 
-この提案が依頼の要件を満たしているかどうかを確認し、必要に応じてさらにカスタマイズしてください。
+### 3. Flaskアプリケーションの実行
+
+上記のコードを適切に設定した後、ターミナルまたはコマンドプロンプトで以下のコマンドを実行してFlaskアプリケーションを起動します。
+
+```bash
+python app.py
+```
+
+これで、ブラウザから `http://160.251.178.228:5000` にアクセスすると `index.html` が、`http://160.251.178.228:5000/recommend` にアクセスすると `recommend.html` がそれぞれ表示されるようになります。
+
+### 4. 確認
+
+最後に、実際にブラウザで上記のURLにアクセスして、ページが正しく表示されるかを確認してください。これにより、依頼された変更が正しく行われているかを検証できます。
