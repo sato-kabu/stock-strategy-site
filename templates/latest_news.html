@@ -1,38 +1,40 @@
-依頼の内容に基づいて、ウェブサイトの `/recommend` ページで最終更新日時が即時反映されるように改善するためのコードを提案します。また、利用者がより理解しやすいように、更新日時の説明とプレビュー画像を表示する機能も追加します。
+依頼に基づいて、サイトの `/recommend` ページで表示される「更新日不明」を最終更新日に変更するためのコードを提案します。ここでは、サイトがHTMLとJavaScriptを使用していると仮定しています。また、サーバーサイドでの日付の取得と送信が可能であることを前提とします。
 
-### 技術的なアプローチ:
-1. **最終更新日時の即時反映**
-   - サーバーサイドでファイルやデータベースの最終更新時刻を取得し、クライアントに送信します。
-   - フロントエンドはこの情報を受け取り、ページに表示します。
+### 1. サーバーサイドの変更（例: Node.jsを使用）
 
-2. **更新日時の説明とプレビュー画像の表示**
-   - 更新日時の横にツールチップまたは小さなアイコンを設置し、マウスオーバーまたはクリックで説明をポップアップ表示します。
-   - 更新内容のプレビュー画像を表示するためのスライダーまたはギャラリーを設置します。
+サーバーサイドでファイルの最終更新日を取得し、クライアントに送信するコードを追加します。
 
-### 具体的なコード例:
+```javascript
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
-#### サーバーサイド (Python Flaskを例として)
+const app = express();
+const port = 3000;
 
-```python
-from flask import Flask, jsonify
-import os
-import datetime
+app.get('/recommend', (req, res) => {
+    const filePath = path.join(__dirname, 'path/to/recommend.html');
 
-app = Flask(__name__)
+    fs.stat(filePath, (err, stats) => {
+        if (err) {
+            return res.status(500).send('Error retrieving file info');
+        }
 
-@app.route('/recommend')
-def recommend():
-    # ファイルの最終更新時刻を取得
-    timestamp = os.path.getmtime("path/to/recommend/data")
-    last_modified = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    # この例ではJSON形式で日時をクライアントに送信
-    return jsonify(last_updated=last_modified)
+        res.send({
+            content: fs.readFileSync(filePath, 'utf8'),
+            lastModified: stats.mtime.toISOString().split('T')[0]  // YYYY-MM-DD format
+        });
+    });
+});
 
-if __name__ == '__main__':
-    app.run(debug=True)
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 ```
 
-#### クライアントサイド (HTML + JavaScript)
+### 2. クライアントサイドのJavaScript変更
+
+クライアントサイドで受け取った最終更新日を表示するためのJavaScriptコードを追加します。
 
 ```html
 <!DOCTYPE html>
@@ -40,31 +42,28 @@ if __name__ == '__main__':
 <head>
     <meta charset="UTF-8">
     <title>Recommend Page</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <div id="update-info">
-        最終更新日時: <span id="last-updated">読み込み中...</span>
-        <img src="info_icon.png" alt="info" style="width:20px;height:20px;" onmouseover="showTooltip()">
-    </div>
-    <div id="tooltip" style="display:none;">この日時はページの内容が最後に更新された時刻です。</div>
-    <script>
-        $(document).ready(function() {
-            $.getJSON('/recommend', function(data) {
-                $('#last-updated').text(data.last_updated);
-            });
-        });
+    <div id="content"></div>
+    <div>Last updated: <span id="lastModified"></span></div>
 
-        function showTooltip() {
-            $('#tooltip').show();
-        }
+    <script>
+        fetch('/recommend')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = data.content;
+                document.getElementById('lastModified').textContent = data.lastModified;
+            })
+            .catch(error => console.error('Error loading the page:', error));
     </script>
 </body>
 </html>
 ```
 
-### 説明:
-- サーバーサイドのコードは、指定されたデータの最終更新時刻を取得し、それをJSON形式でクライアントに送信します。
-- クライアントサイドのコードは、このJSONデータを受け取り、ページに表示します。また、情報アイコンにマウスを合わせると説明が表示されるようになっています。
+### 説明
 
-この提案が依頼の要件を満たしているかどうかを確認し、必要に応じてさらにカスタマイズしてください。
+1. **サーバーサイド**: Node.jsを使用して、指定されたファイルの最終更新日時を取得し、それをクライアントに送信します。`fs.stat`を使用してファイルのメタデータを取得し、その中の`mtime`プロパティから最終更新時刻を取得しています。
+
+2. **クライアントサイド**: JavaScriptの`fetch` APIを使用してサーバーからページ内容と最終更新日を取得します。取得したデータはHTMLに適切に表示されます。
+
+この変更により、`/recommend`ページの「更新日不明」が実際の最終更新日に更新され、ユーザーに対してより正確な情報が提供されます。
