@@ -1,71 +1,47 @@
-以下のステップで、`app.py`の`/recommend`ルートを修正するための具体的なコードを提案します。このコードはFlaskを使ったWebアプリケーションにおいて、事前に準備された`historical_data.csv`を用いてロジスティック回帰モデルを訓練し、そのモデルを使用して予測を行います。
+依頼に基づいて、より詳細で正確な予測を提供するために以下の修正を提案します。この修正は、予測アルゴリズムの改善とフロントエンドの表示方法の両方に関わります。
 
-### ステップ 1: 必要なライブラリをインポートする
+#### 1. 予測アルゴリズムの改善
 
-```python
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from flask import Flask, request, jsonify
-```
+- **データの品質向上**: 予測の精度を高めるために、より多くの歴史データや市場の動向を考慮する。
+- **機械学習モデルの導入**: 現在の単純な統計モデルから、時系列予測に適した機械学習モデルへの移行を検討します。例えば、ARIMA（自己回帰和分移動平均モデル）やLSTM（長短期記憶ネットワーク）が候補です。
+- **パラメータの最適化**: モデルのハイパーパラメータをチューニングして、最適な予測結果を得る。
 
-### ステップ 2: データの読み込みと前処理
+#### 2. フロントエンドの表示方法の変更
 
-```python
-# データを読み込む
-data = pd.read_csv('historical_data.csv')
+- **表示形式の変更**: 現在の「100%上昇」という表示から、「XX日までにYY%上昇する確率はZZ%」という形式に変更します。
+- **日付と確率の精度設定**: 予測のターゲットとなる日付は、短期（1週間後）、中期（1ヶ月後）、長期（3ヶ月後）の3つの期間で提供します。確率は整数値ではなく、小数点第二位まで表示することで、より精緻な情報を提供します。
 
-# 特徴量とターゲットを定義
-X = data.drop('target', axis=1)  # 'target'列を除外
-y = data['target']
-
-# データを訓練セットとテストセットに分割
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# 特徴量のスケーリング
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-```
-
-### ステップ 3: モデルの訓練
+#### 具体的なコードの変更案（Python Flaskと仮定）
 
 ```python
-# ロジスティック回帰モデルのインスタンスを作成し、訓練する
-model = LogisticRegression()
-model.fit(X_train_scaled, y_train)
-```
+from flask import Flask, jsonify
+import your_prediction_model  # 予測モデルをインポート
 
-### ステップ 4: Flaskアプリケーションの設定
-
-```python
 app = Flask(__name__)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/recommend')
 def recommend():
-    # JSONリクエストから特徴量を取得
-    features = request.json
-    features_df = pd.DataFrame([features])
+    # 予測モデルからデータを取得
+    predictions = your_prediction_model.get_predictions()
+    results = []
+    for prediction in predictions:
+        # 日付、予測上昇率、確率を計算
+        date = prediction['target_date']
+        increase_percent = prediction['increase_percent']
+        probability = prediction['probability']
+        
+        # 結果を整形
+        result = f"{date}までに{increase_percent:.2f}%上昇する確率は{probability:.2f}%です。"
+        results.append(result)
     
-    # 特徴量をスケーリング
-    features_scaled = scaler.transform(features_df)
-    
-    # 予測を実行
-    prediction = model.predict_proba(features_scaled)[0, 1]
-    
-    # 確率をJSON形式で返す
-    return jsonify({'probability': prediction})
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-### ステップ 5: アプリケーションのテスト
+#### 注意点
+- `your_prediction_model`は、実際の予測モデルの実装に置き換える必要があります。
+- 予測データの構造（`predictions`の中の`target_date`, `increase_percent`, `probability`）は、実際のデータ構造に合わせて調整してください。
 
-このコードを実行する前に、`historical_data.csv`が正しいフォーマットで存在し、適切な特徴量とターゲット列を含んでいることを確認してください。また、POSTリクエストで適切なJSONデータが送信されることを確認し、ローカルでテストを行ってください。
-
-### 注意点
-
-- このコードは、データセットの特徴量が数値型であることを前提としています。カテゴリカル変数が含まれる場合は、適切なエンコーディング処理が必要です。
-- エラーハンドリングは最小限にしています。実際のアプリケーションでは、より詳細な入力検証やエラーハンドリングが必要です。
+この提案により、ユーザーはより詳細で信頼性の高い情報を得ることができ、サイトの信頼性とユーザー満足度が向上すると考えられます。
