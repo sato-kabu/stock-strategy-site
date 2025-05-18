@@ -149,7 +149,3 @@ def inject_ticker_data():
         ticker_data = {}
 
     return {"ticker_data": ticker_data}
-
-if __name__ == "__main__":
-    print(">>> Flask 起動中...")
-    app.run(host="0.0.0.0", port=5000, debug=False)
