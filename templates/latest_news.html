@@ -1,46 +1,32 @@
-依頼の内容に基づいて、Flaskアプリケーションのテンプレートとルートを修正するための具体的なコードを以下に示します。この提案では、Flaskの基本的な構造を使用して、特定のURL（`/` と `/recommend`）にアクセスした際にテンプレートが適切に表示されるようにします。
+この問題を解決するためには、まず株価データが最後に更新された日時を取得し、それを画面に表示する必要があります。以下に、この修正を行うための一般的なアプローチと具体的なコードの例を示します。この例では、フロントエンドがHTMLとJavaScriptを使用していると仮定しています。サーバーサイドはPythonとFlaskを使用していると仮定します。
 
-### 1. Flaskアプリケーションのセットアップ
+### ステップ 1: サーバーサイドで最終更新日時を取得する
 
-まず、Flaskアプリケーションをセットアップします。以下のコードを `app.py` というファイルに記述してください。
+サーバーサイドのコードにおいて、株価データの最終更新日時を取得するロジックを追加します。この日時はデータベースまたはデータソースから取得することが想定されます。
 
 ```python
-from flask import Flask, render_template
+from flask import Flask, jsonify
+import datetime  # 仮に更新日時がdatetimeオブジェクトで管理されているとします
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+# 仮のデータ更新日時
+last_updated = datetime.datetime.now()  # 実際にはデータベースから取得する
 
-@app.route('/recommend')
-def recommend():
-    return render_template('recommend.html')
+@app.route('/api/last_updated')
+def get_last_updated():
+    return jsonify({
+        'last_updated': last_updated.strftime('%Y-%m-%d %H:%M:%S')
+    })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
 ```
 
-### 2. HTMLテンプレートの作成
+### ステップ 2: フロントエンドで最終更新日時を表示する
 
-次に、Flaskアプリケーションで使用する2つのHTMLテンプレートを作成します。これらのファイルは `templates` ディレクトリ内に配置します。
+次に、フロントエンドのJavaScriptを使用して、APIから取得した最終更新日時をHTMLページに表示します。
 
-- `index.html` (ホームページ用)
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-</head>
-<body>
-    <h1>Welcome to Our Website!</h1>
-    <p>This is the home page.</p>
-</body>
-</html>
-```
-
-- `recommend.html` (推薦ページ用)
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -49,22 +35,26 @@ if __name__ == '__main__':
     <title>Recommendation Page</title>
 </head>
 <body>
-    <h1>Recommendations</h1>
-    <p>Here are your recommendations.</p>
+    <h1>おすすめ銘柄</h1>
+    <div id="lastUpdated">最終更新日時：読み込み中...</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/last_updated')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('lastUpdated').textContent = `最終更新日時：${data.last_updated}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching last updated date:', error);
+                    document.getElementById('lastUpdated').textContent = '最終更新日時：エラーが発生しました';
+                });
+        });
+    </script>
 </body>
 </html>
 ```
 
-### 3. Flaskアプリケーションの実行
+このコードでは、ページが読み込まれたときにサーバーから最終更新日時を取得し、それをページの適切な部分に表示します。エラーが発生した場合は、ユーザーにエラーメッセージが表示されます。
 
-上記のコードを適切に設定した後、ターミナルまたはコマンドプロンプトで以下のコマンドを実行してFlaskアプリケーションを起動します。
-
-```bash
-python app.py
-```
-
-これで、ブラウザから `http://160.251.178.228:5000` にアクセスすると `index.html` が、`http://160.251.178.228:5000/recommend` にアクセスすると `recommend.html` がそれぞれ表示されるようになります。
-
-### 4. 確認
-
-最後に、実際にブラウザで上記のURLにアクセスして、ページが正しく表示されるかを確認してください。これにより、依頼された変更が正しく行われているかを検証できます。
+これらの変更を適用することで、「おすすめ銘柄の最終更新日時：不明」という問題を解決し、ユーザーに正確な情報を提供することができます。
