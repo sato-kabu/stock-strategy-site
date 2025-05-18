@@ -1,60 +1,27 @@
-この問題を解決するためには、まず株価データが最後に更新された日時を取得し、それを画面に表示する必要があります。以下に、この修正を行うための一般的なアプローチと具体的なコードの例を示します。この例では、フロントエンドがHTMLとJavaScriptを使用していると仮定しています。サーバーサイドはPythonとFlaskを使用していると仮定します。
+以下の手順に従って、`recommendations.html` テンプレートに必要な変更を加えてください。これにより、`last_updated` 変数を使用して最終更新日時を表示できます。
 
-### ステップ 1: サーバーサイドで最終更新日時を取得する
-
-サーバーサイドのコードにおいて、株価データの最終更新日時を取得するロジックを追加します。この日時はデータベースまたはデータソースから取得することが想定されます。
-
-```python
-from flask import Flask, jsonify
-import datetime  # 仮に更新日時がdatetimeオブジェクトで管理されているとします
-
-app = Flask(__name__)
-
-# 仮のデータ更新日時
-last_updated = datetime.datetime.now()  # 実際にはデータベースから取得する
-
-@app.route('/api/last_updated')
-def get_last_updated():
-    return jsonify({
-        'last_updated': last_updated.strftime('%Y-%m-%d %H:%M:%S')
-    })
-
-if __name__ == '__main__':
-    app.run(debug=True)
-```
-
-### ステップ 2: フロントエンドで最終更新日時を表示する
-
-次に、フロントエンドのJavaScriptを使用して、APIから取得した最終更新日時をHTMLページに表示します。
+1. `recommendations.html` ファイルを開きます。
+2. HTMLの適切な場所（例えば、おすすめ銘柄リストの上部や下部）に以下のコードを挿入します。
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recommendation Page</title>
-</head>
-<body>
-    <h1>おすすめ銘柄</h1>
-    <div id="lastUpdated">最終更新日時：読み込み中...</div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/last_updated')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('lastUpdated').textContent = `最終更新日時：${data.last_updated}`;
-                })
-                .catch(error => {
-                    console.error('Error fetching last updated date:', error);
-                    document.getElementById('lastUpdated').textContent = '最終更新日時：エラーが発生しました';
-                });
-        });
-    </script>
-</body>
-</html>
+<p>おすすめ銘柄の最終更新日時：{{ last_updated }}</p>
 ```
 
-このコードでは、ページが読み込まれたときにサーバーから最終更新日時を取得し、それをページの適切な部分に表示します。エラーが発生した場合は、ユーザーにエラーメッセージが表示されます。
+このコードは、Flaskがレンダリングする際に `last_updated` 変数の値を取得し、その値を HTML ページ上に表示します。`{{ last_updated }}` は、Flask テンプレートエンジン（Jinja2）の構文を使用しています。これにより、サーバー側で設定された変数の値をクライアント側のHTMLに埋め込むことができます。
 
-これらの変更を適用することで、「おすすめ銘柄の最終更新日時：不明」という問題を解決し、ユーザーに正確な情報を提供することができます。
+### 注意点:
+- 確認してください、`last_updated` 変数が Flask のビュー関数から `recommendations.html` に渡されていることを。これは通常、Flask の `render_template` 関数を使用して行われます。例えば以下のようになります:
+
+```python
+from flask import render_template
+from datetime import datetime
+
+@app.route('/recommend')
+def recommend():
+    last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return render_template('recommendations.html', last_updated=last_updated)
+```
+
+- `last_updated` のフォーマットが適切であることを確認してください。必要に応じて、日時のフォーマットを調整することができます（上記の例では、年-月-日 時:分:秒 の形式を使用しています）。
+
+これで、ユーザーは常に最新の情報を確認できるようになります。
