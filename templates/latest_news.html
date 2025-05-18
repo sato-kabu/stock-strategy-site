@@ -1,43 +1,69 @@
-依頼に基づいて、recommend画面に表示される「上昇確率」の表記を変更するための具体的なコードの修正を提案します。ただし、具体的な実装の詳細（使用している言語やフレームワーク、データソースなど）が不明なため、一般的なHTMLとJavaScriptを使った例を示します。もしバックエンドでの計算やデータベースの更新が必要な場合、それに応じた追加の情報が必要です。
+依頼に基づいて、サイトの `/recommend` ページで表示される「更新日不明」を最終更新日に変更するためのコードを提案します。ここでは、サイトがHTMLとJavaScriptを使用していると仮定しています。また、サーバーサイドでの日付の取得と送信が可能であることを前提とします。
 
-### HTMLの修正:
-まず、HTMLファイルで「上昇確率」を表示する部分を見つけます。以下はその部分の一例です。
+### 1. サーバーサイドの変更（例: Node.jsを使用）
 
-```html
-<div id="probabilityDisplay">上昇確率: <span id="probabilityValue">XX%</span></div>
-```
-
-### JavaScriptの修正:
-次に、この確率を計算し、表示するJavaScriptのコードを修正します。以下に示すのは、特定の日付までの上昇確率を計算し、更新する関数の例です。
+サーバーサイドでファイルの最終更新日を取得し、クライアントに送信するコードを追加します。
 
 ```javascript
-// 仮定: calculateProbabilityは、特定の日付までの上昇確率を計算する関数
-function updateProbability() {
-    const targetDate = new Date('May 20, 2023');
-    const today = new Date();
-    const daysUntilTarget = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
-    if (daysUntilTarget >= 0) {
-        const probability = calculateProbability(daysUntilTarget);
-        document.getElementById('probabilityValue').innerText = `${probability}%`;
-        document.getElementById('probabilityDisplay').innerText = `5月20日までに10%以上上がる確率: ${probability}%`;
-    } else {
-        document.getElementById('probabilityDisplay').innerText = '指定日付は過去です';
-    }
-}
+const app = express();
+const port = 3000;
 
-// この関数はサーバーからデータを取得するか、何らかのロジックに基づいて確率を計算する必要があります。
-function calculateProbability(daysUntilTarget) {
-    // ここに確率計算のロジックを実装
-    return Math.random() * 100; // 仮の計算
-}
+app.get('/recommend', (req, res) => {
+    const filePath = path.join(__dirname, 'path/to/recommend.html');
 
-// ページ読み込み時に確率を更新
-document.addEventListener('DOMContentLoaded', updateProbability);
+    fs.stat(filePath, (err, stats) => {
+        if (err) {
+            return res.status(500).send('Error retrieving file info');
+        }
+
+        res.send({
+            content: fs.readFileSync(filePath, 'utf8'),
+            lastModified: stats.mtime.toISOString().split('T')[0]  // YYYY-MM-DD format
+        });
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 ```
 
-### 補足:
-- `calculateProbability` 関数は、実際の確率計算のロジックに置き換える必要があります。これはサーバーサイドからのデータ取得や、既存の確率計算アルゴリズムに基づくかもしれません。
-- 上記のコードは、ページが読み込まれるたびに確率を更新します。リアルタイムでの更新が必要な場合は、WebSocketなどを使用してリアルタイムに確率を更新する設計を検討する必要があります。
+### 2. クライアントサイドのJavaScript変更
 
-この提案が依頼に沿ったものであるか、またその他の技術的要件については、さらに情報を提供いただければ、より具体的な提案が可能です。
+クライアントサイドで受け取った最終更新日を表示するためのJavaScriptコードを追加します。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommend Page</title>
+</head>
+<body>
+    <div id="content"></div>
+    <div>Last updated: <span id="lastModified"></span></div>
+
+    <script>
+        fetch('/recommend')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = data.content;
+                document.getElementById('lastModified').textContent = data.lastModified;
+            })
+            .catch(error => console.error('Error loading the page:', error));
+    </script>
+</body>
+</html>
+```
+
+### 説明
+
+1. **サーバーサイド**: Node.jsを使用して、指定されたファイルの最終更新日時を取得し、それをクライアントに送信します。`fs.stat`を使用してファイルのメタデータを取得し、その中の`mtime`プロパティから最終更新時刻を取得しています。
+
+2. **クライアントサイド**: JavaScriptの`fetch` APIを使用してサーバーからページ内容と最終更新日を取得します。取得したデータはHTMLに適切に表示されます。
+
+この変更により、`/recommend`ページの「更新日不明」が実際の最終更新日に更新され、ユーザーに対してより正確な情報が提供されます。
